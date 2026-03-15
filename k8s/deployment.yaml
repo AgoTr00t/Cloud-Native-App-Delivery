@@ -34,7 +34,7 @@ spec:
       containers:
       - name: inventory-app
         # Image depuis Docker Hub (À MODIFIER AVEC VOTRE USERNAME)
-        image: AGoTr00t/inventory-app:latest
+        image: agotr00t/inventory-app:latest
         imagePullPolicy: Always
         
         # Port exposé par le conteneur
