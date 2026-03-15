@@ -2,9 +2,9 @@
 
 <div align="center">
   
-![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
+[![Kubernetes](https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
 
 **Application de gestion d'inventaire avec déploiement cloud-native (Docker + Kubernetes + CI/CD)**
 
@@ -179,7 +179,5 @@ Application accessible via http://<votre_url>:30080
 <div align="center">
 Date de livraison : 15 mars 2026
 Auteur : Atigou, AWA et Abdou Khadre (AGoTr00t)
-
-https://img.shields.io/badge/Statut-Compl%C3%A9t%C3%A9-success?style=for-the-badge
 
 </div>
