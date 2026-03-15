@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-app-deployment
+  namespace: default
+  labels:
+    app: inventory-app
+    version: v1
+    managed-by: kubectl
+spec:
+  # 3 réplicas pour la haute disponibilité
+  replicas: 3
+  
+  # Stratégie de mise à jour
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  
+  # Sélecteur pour trouver les pods
+  selector:
+    matchLabels:
+      app: inventory-app
+  
+  # Template des pods
+  template:
+    metadata:
+      labels:
+        app: inventory-app
+        version: v1
+    spec:
+      # Configuration des conteneurs
+      containers:
+      - name: inventory-app
+        # Image depuis Docker Hub (À MODIFIER AVEC VOTRE USERNAME)
+        image: AGoTr00t/inventory-app:latest
+        imagePullPolicy: Always
+        
+        # Port exposé par le conteneur
+        ports:
+        - containerPort: 5000
+          name: http
+        
+        # Variables d'environnement
+        env:
+        - name: PORT
+          value: "5000"
+        - name: ENVIRONMENT
+          value: "production"
+        
+        # Ressources allouées
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        
+        # Vérification de la santé du conteneur
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Vérification que l'application est prête à recevoir du trafic
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # Cycle de vie
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]
+      
+      # Tolérances et affinité (optionnel)
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - inventory-app
+              topologyKey: kubernetes.io/hostname
+---
+# Horizontal Pod Autoscaler (optionnel)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: inventory-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: inventory-app-deployment
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
